@@ -54,9 +54,33 @@
   <ol id="all-stories-list" class="stories-list"></ol>
 
 </section>
+<!---Add New Story-->
+<section class="stories-cointainer container">
+
+  <!--New Story Form-->
+  <form action class="hidden" id="submit-form" style="display: flex;">
+  <div>
+    <label for="create-author">author</label>
+    <input id="create-author" required placeholder="author name">
+  </div>
+  <div>  
+  <label for="create-title">title</label>
+  <input id="create-title" required placeholder="story title">
+</div>
+<div>   
+<label for="create-url">url</label>
+<input id="create-url" required placeholder="story url">
+</div>
+<button type="submit">submit</button>
+<hr>
+</form>
+
+
+</section>
 
 <!-- Login and signup forms -->
 <section class="account-forms-container container">
+  
 
   <!-- Login form -->
   <form action="#" id="login-form" class="account-form hidden" method="post">
