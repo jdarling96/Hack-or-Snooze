@@ -41,6 +41,9 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+      <span class="star">
+      <i class="fa-star far"></i>
+      </span>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -66,3 +69,7 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+
+
+// we need to append our clickable favorites button to every story

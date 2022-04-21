@@ -223,7 +223,7 @@ class User {
 
           const favorite = response.data.user.favorites
 
-          this.favorites.unshift(favorite)
+           return this.favorites.unshift(favorite)
 
 
         }

@@ -37,8 +37,18 @@ function updateNavOnLogin() {
 }
 
 function navSubmitForm(evt) {
-  console.debug("navLoginClick", evt)
-  $submitForm.css("display", "flex")
+  console.debug("navLoginClick", evt);
+  $submitForm.css("display", "flex");
 
 }
 $("#nav-submit").on("click", navSubmitForm)
+
+function navFavoritesClick(evt){
+  console.debug("navFavoriteClick", evt);
+  //$allStoriesList.css("display", "none");
+  $allStoriesList.hide();
+  $favorites.css("display", "block");
+
+}
+
+$("#nav-favorites").on("click", navFavoritesClick)
