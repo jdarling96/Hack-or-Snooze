@@ -86,14 +86,13 @@ class StoryList {
     }) 
     
     
-    let story = response.data.story
-    const addedStory = new Story(story)
-    this.stories.unshift(addedStory)
-    user.ownStories.unshift(addedStory)
+    const story = new Story(response.data.story)
+    
+    this.stories.unshift(story)
+    user.ownStories.unshift(story)
 
     
-    return addedStory
-      
+    return story
 
     
   
@@ -215,4 +214,19 @@ class User {
       return null;
     }
   }
+         
+
+        static async addAFavoriteStory (username, storyId) {
+          const token = username.loginToken
+          
+          const response = await axios.post(`https://hack-or-snooze-v3.herokuapp.com/users/${username}/favorites/${storyId}`, token);
+
+          const favorite = response.data.user.favorites
+
+          this.favorites.unshift(favorite)
+
+
+        }
+
+
 }

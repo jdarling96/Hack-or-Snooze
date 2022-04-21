@@ -6,11 +6,27 @@ let storyList;
 /** Get and show stories when site first loads. */
 
 async function getAndShowStoriesOnStart() {
-  storyList = await StoryList.getStories();
+  storyList = await StoryList.getStories();            //this is how we populate the global variable storyList
   $storiesLoadingMsg.remove();
 
   putStoriesOnPage();
 }
+
+async function addStoryFromForm (evt) {
+  console.debug("addStoryFromForm", evt)
+  evt.preventDefault();
+  
+  
+  const title = $("#create-title").val()
+  const author = $("#create-author").val()
+  const url = $("#create-url").val()
+  const storyData = {title,author,url}
+
+  const story = await storyList.addStory(currentUser, storyData);
+  return story
+}
+
+ $submitForm.on("submit", addStoryFromForm);
 
 /**
  * A render method to render HTML for an individual Story instance

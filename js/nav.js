@@ -8,11 +8,12 @@
 
 function navAllStories(evt) {
   console.debug("navAllStories", evt);
-  hidePageComponents();
+  hidePageComponents();                       //hides everything in the nav bar as well as list of stories
   putStoriesOnPage();
+  $submitForm.css("display", "none")                         //populates the ordered list of stories from the global storyList variable// the variable is an instace of the StoryList object
 }
 
-$body.on("click", "#nav-all", navAllStories);
+$body.on("click", "#nav-all", navAllStories);             //click on Hack or Snooze and run navAllStories()
 
 /** Show login/signup on click on "login" */
 
@@ -34,3 +35,10 @@ function updateNavOnLogin() {
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+
+function navSubmitForm(evt) {
+  console.debug("navLoginClick", evt)
+  $submitForm.css("display", "flex")
+
+}
+$("#nav-submit").on("click", navSubmitForm)
