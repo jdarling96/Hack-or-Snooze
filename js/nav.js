@@ -7,10 +7,12 @@
 /** Show main list of all stories when click site name */
 
 function navAllStories(evt) {
+  evt.preventDefault();
   console.debug("navAllStories", evt);
   hidePageComponents();                       //hides everything in the nav bar as well as list of stories
   putStoriesOnPage();
-  $submitForm.css("display", "none")                         //populates the ordered list of stories from the global storyList variable// the variable is an instace of the StoryList object
+  $submitForm.css("display", "none") 
+  $favoritestorieslist.hide();                        //populates the ordered list of stories from the global storyList variable// the variable is an instace of the StoryList object
 }
 
 $body.on("click", "#nav-all", navAllStories);             //click on Hack or Snooze and run navAllStories()
@@ -48,6 +50,8 @@ function navFavoritesClick(evt){
   //$allStoriesList.css("display", "none");
   $allStoriesList.hide();
   $favorites.css("display", "block");
+  putStoriesOnFavorites()
+
 
 }
 

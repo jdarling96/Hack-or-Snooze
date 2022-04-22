@@ -10,6 +10,9 @@ async function getAndShowStoriesOnStart() {
   $storiesLoadingMsg.remove();
 
   putStoriesOnPage();
+  putStoriesOnFavorites()
+  $favorites.hide();
+  
 }
 
 async function addStoryFromForm (evt) {
@@ -23,6 +26,7 @@ async function addStoryFromForm (evt) {
   const storyData = {title,author,url}
 
   const story = await storyList.addStory(currentUser, storyData);
+ 
   return story
 }
 
@@ -42,7 +46,7 @@ function generateStoryMarkup(story) {
   return $(`
       <li id="${story.storyId}">
       <span class="star">
-      <i class="fa-star far"></i>
+      <i class="fa-star far" style="cursor: pointer;"></i>
       </span>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
@@ -68,8 +72,57 @@ function putStoriesOnPage() {
   }
 
   $allStoriesList.show();
+  //$(".fa-star").css('cursor', 'pointer')
 }
 
+async function updateUserFavorites(evt){
+  $(evt.target).toggleClass("fas")
+  let username = currentUser.username
+  let token = currentUser.loginToken
+  
+  let getLi = $(evt.target).closest("li")
+  let storyId = getLi[0].id
+   //console.log(storyId)
+   //$(".fa-star far").class("fa-star fas")
+   const favorites = await currentUser.addAFavoriteStory(username, storyId, token)
+   
+   return favorites
+   
 
+}
+$allStoriesList.on("click",".fa-star", updateUserFavorites)
+
+
+
+function putStoriesOnFavorites(){
+  console.debug("putStoriesOnFavorites")
+  $favoritestorieslist.empty()
+
+
+  for (let favorite of currentUser.favorites){
+    const $favorite = generateStoryMarkup(favorite)
+    $favoritestorieslist.append($favorite)
+  }
+  $favoritestorieslist.show();
+
+
+}
+
+  async function deleteStoriesOnFavorite(evt){
+  console.debug("deleteStoriesOnFavorites")
+  $(evt.target).toggleClass("fas")
+  let username = currentUser.username
+  let token = currentUser.loginToken
+  
+  let getLi = $(evt.target).closest("li")
+  let storyId = getLi[0].id
+  
+   const favorites = await currentUser.deleteAFavoriteStory(username, storyId, token)
+   
+   return favorites
+
+}
+
+$favorites.on("click", ".fa-star", deleteStoriesOnFavorite)
 
 // we need to append our clickable favorites button to every story
