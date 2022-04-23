@@ -60,6 +60,8 @@ function logout(evt) {
   console.debug("logout", evt);
   localStorage.clear();
   location.reload();
+  
+  
 }
 
 $navLogOut.on("click", logout);

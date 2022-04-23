@@ -25,7 +25,7 @@ class Story {
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    return new URL(this.url).host
   }
 }
 
@@ -97,8 +97,23 @@ class StoryList {
     
   
   }
-}
 
+  async removeStory(user, storyId) {
+  const token = user.loginToken;
+  await axios({
+    url: `${BASE_URL}/stories/${storyId}`,
+    method: "DELETE",
+    data: { token: user.loginToken }
+  });
+
+  // filter out the story whose ID we are removing
+  this.stories = this.stories.filter(story => story.storyId !== storyId);
+
+  // do the same thing for the user's list of stories & their favorites
+  user.ownStories = user.ownStories.filter(s => s.storyId !== storyId);
+  user.favorites = user.favorites.filter(s => s.storyId !== storyId);
+}
+}
 
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
@@ -216,35 +231,45 @@ class User {
   }
          
 
-        async addAFavoriteStory (username, storyId, token) {
-          //const token = username.loginToken
+  async addFavorite(user, story) {
+    const username = user.username;
+    const token = user.loginToken;
+    const { storyId } = story;
+    try {
+      await axios.post(
+        `${BASE_URL}/users/${username}/favorites/${storyId}`,
+        { token }
+      );
+      user.favorites.unshift(story);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+      
+  
+       async removeFavorite(user, story) {
+          const username = user.username;
+          const token = user.loginToken;
+          const { storyId } = story;
           
-          const response = await axios({
-            url: `https://hack-or-snooze-v3.herokuapp.com/users/${username}/favorites/${storyId}`,
-            method: "POST",
-            data: {token}
-          }) 
-          const favorite = new Story(response.data)
-           
-           this.favorites.push(favorite)
-           return favorite
+            await axios.delete(
+              `${BASE_URL}/users/${username}/favorites/${storyId}`,
+              { data: { token } }
+            );
+           for(let i of user.favorites) {
+             if(i.story === user.favorites.story)
+             user.favorites.splice(user.favorites.indexOf(story), 1)
 
-
-        }
+           }
+          }
+            
+          
 
         
-         async deleteAFavoriteStory(username, storyId, token){
-          const response = await axios ({
-            url: `https://hack-or-snooze-v3.herokuapp.com/users/${username}/favorites/${storyId}`,
-            method: "DELETE",
-            data: {token}
-          })
+      
+      }
           
-          const removeFavorite = new Story(response.data)
-          this.favorites.split(removeFavorite)
-          return removeFavorite
-
-        }
 
 
-}
+

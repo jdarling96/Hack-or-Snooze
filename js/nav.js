@@ -7,12 +7,15 @@
 /** Show main list of all stories when click site name */
 
 function navAllStories(evt) {
-  evt.preventDefault();
-  console.debug("navAllStories", evt);
-  hidePageComponents();                       //hides everything in the nav bar as well as list of stories
-  putStoriesOnPage();
+  //evt.preventDefault();
   $submitForm.css("display", "none") 
-  $favoritestorieslist.hide();                        //populates the ordered list of stories from the global storyList variable// the variable is an instace of the StoryList object
+  console.debug("navAllStories", evt);
+  hidePageComponents();
+  $ownStories.hide();
+  $favorites.hide();                       //hides everything in the nav bar as well as list of stories
+  putStoriesOnPage();
+  //$submitForm.css("display", "hidden") 
+  //$favoritestorieslist.hide();                        //populates the ordered list of stories from the global storyList variable// the variable is an instace of the StoryList object
 }
 
 $body.on("click", "#nav-all", navAllStories);             //click on Hack or Snooze and run navAllStories()
@@ -34,12 +37,15 @@ function updateNavOnLogin() {
   console.debug("updateNavOnLogin");
   $(".main-nav-links").show();
   $navLogin.hide();
+  $loginForm.hide();
+  $signupForm.hide()
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
 
 function navSubmitForm(evt) {
   console.debug("navLoginClick", evt);
+  $ownStories.hide();
   $submitForm.css("display", "flex");
 
 }
@@ -47,12 +53,30 @@ $("#nav-submit").on("click", navSubmitForm)
 
 function navFavoritesClick(evt){
   console.debug("navFavoriteClick", evt);
-  //$allStoriesList.css("display", "none");
   $allStoriesList.hide();
+  $ownStories.hide();
+  $submitForm.hide();
+  //$allStoriesList.hide();
   $favorites.css("display", "block");
+  //hidePageComponents();
   putStoriesOnFavorites()
 
 
 }
 
 $("#nav-favorites").on("click", navFavoritesClick)
+
+
+function navMyStories(evt){
+  console.debug("navMyStories", evt)
+  putUserStoriesOnPage()
+  $favorites.hide(); 
+  $allStoriesList.hide();
+  $submitForm.hide();
+  $ownStories.css("display", "block")
+  
+
+}
+
+
+$("#nav-my-stories").on("click", navMyStories)

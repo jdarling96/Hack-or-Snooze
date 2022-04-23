@@ -10,7 +10,7 @@ async function getAndShowStoriesOnStart() {
   $storiesLoadingMsg.remove();
 
   putStoriesOnPage();
-  putStoriesOnFavorites()
+  //putStoriesOnFavorites()
   $favorites.hide();
   
 }
@@ -27,10 +27,32 @@ async function addStoryFromForm (evt) {
 
   const story = await storyList.addStory(currentUser, storyData);
  
-  return story
+  const $story = generateStoryMarkup(story);
+  $allStoriesList.prepend($story);
+
+  $submitForm.slideUp("slow");
+  $submitForm.trigger("reset");
 }
 
  $submitForm.on("submit", addStoryFromForm);
+
+ function putUserStoriesOnPage() {
+  console.debug("putUserStoriesOnPage");
+
+  $ownStories.empty();
+
+  if (currentUser.ownStories.length === 0) {
+    $ownStories.append("<h5>No stories added by user yet!</h5>");
+  } else {
+    // loop through all of users stories and generate HTML for them
+    for (let story of currentUser.ownStories) {
+      let $story = generateStoryMarkup(story, true);
+      $ownStories.append($story);
+    }
+  }
+
+  $ownStories.show();
+}
 
 /**
  * A render method to render HTML for an individual Story instance
@@ -60,6 +82,7 @@ function generateStoryMarkup(story) {
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
+
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
@@ -77,20 +100,23 @@ function putStoriesOnPage() {
 
 async function updateUserFavorites(evt){
   $(evt.target).toggleClass("fas")
-  let username = currentUser.username
-  let token = currentUser.loginToken
+  //let username = currentUser.username
+  //let token = currentUser.loginToken
   
-  let getLi = $(evt.target).closest("li")
-  let storyId = getLi[0].id
-   //console.log(storyId)
+  let getLi = $(evt.target).closest("li");
+  let storyId = getLi.attr("id");
+  //console.log(storyId)
    //$(".fa-star far").class("fa-star fas")
-   const favorites = await currentUser.addAFavoriteStory(username, storyId, token)
+   const story = storyList.stories.find(s => s.storyId === storyId)
+   const favorites = await currentUser.addFavorite(currentUser, story)
    
    return favorites
    
 
 }
-$allStoriesList.on("click",".fa-star", updateUserFavorites)
+
+
+$allStoriesList.on("click",".star", updateUserFavorites)
 
 
 
@@ -108,21 +134,42 @@ function putStoriesOnFavorites(){
 
 }
 
-  async function deleteStoriesOnFavorite(evt){
+  async function removeFavorite(evt){
   console.debug("deleteStoriesOnFavorites")
   $(evt.target).toggleClass("fas")
-  let username = currentUser.username
-  let token = currentUser.loginToken
+  
   
   let getLi = $(evt.target).closest("li")
-  let storyId = getLi[0].id
-  
-   const favorites = await currentUser.deleteAFavoriteStory(username, storyId, token)
+  let storyId = getLi.attr("id")
+  const story = storyList.stories.find(s => s.storyId === storyId)
+   await currentUser.removeFavorite(currentUser, story)
    
-   return favorites
+   console.log(evt.target)
+   let remove = $(evt.target).closest("li")
+   remove.css("display", "none")
+
+   //$("#favorite-stories-list").$(evt.target).empty()
+   //$favorites.show()
+   
+   //return favorites
 
 }
 
-$favorites.on("click", ".fa-star", deleteStoriesOnFavorite)
+$favorites.on("click", ".star", removeFavorite)
 
+
+
+
+async function deleteStory(evt) {
+  console.debug("deleteStory");
+
+  const $closestLi = $(evt.target).closest("li");
+  const storyId = $closestLi.attr("id");
+
+  await storyList.removeStory(currentUser, storyId);
+
+  // re-generate story list
+  await putUserStoriesOnPage();
+}
 // we need to append our clickable favorites button to every story
+$ownStories.on("click", ".star", deleteStory)
