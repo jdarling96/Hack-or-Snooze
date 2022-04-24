@@ -64,10 +64,10 @@ async function addStoryFromForm (evt) {
 function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
-  const hostName = story.getHostName();
+  const hostName = story.getHostName();              //LIVE CODE REVIEW: IS THERE A WAY TO USE BOOLEAN LOGIC TO RETURN THE CURRENT TOGGLECLASS THAT WAS CLICKED ON FOR OUT STAR IMAGE...RIGHT NOW IT THE HTML GETS GERERATED WITH A SET CLASS
   return $(`
       <li id="${story.storyId}">
-      <span class="star">
+      <span class="star">                                                       
       <i class="fa-star far" style="cursor: pointer;"></i>
       </span>
         <a href="${story.url}" target="a_blank" class="story-link">
@@ -141,8 +141,8 @@ function putStoriesOnFavorites(){
   
   let getLi = $(evt.target).closest("li")
   let storyId = getLi.attr("id")
-  const story = storyList.stories.find(s => s.storyId === storyId)
-   await currentUser.removeFavorite(currentUser, story)
+  const story = storyList.stories.find(s => s.storyId === storyId)  // if storylist.stories contains the same story id we click on then return that story.id
+   await currentUser.removeFavorite(currentUser, story)              //pass the currentUer global variable for user
    
    console.log(evt.target)
    let remove = $(evt.target).closest("li")

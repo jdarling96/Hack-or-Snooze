@@ -26,8 +26,10 @@ class Story {
   getHostName() {
     // UNIMPLEMENTED: complete this function!
     return new URL(this.url).host
+    //
   }
 }
+// CONFUSED ON HOW THE ABOVE OBJ METHOD getHostName() WORKS.
 
 
 /******************************************************************************
@@ -99,7 +101,7 @@ class StoryList {
   }
 
   async removeStory(user, storyId) {
-  const token = user.loginToken;
+  const token = user.loginToken;                // I believe I can get rid of this as the token is being found in the body
   await axios({
     url: `${BASE_URL}/stories/${storyId}`,
     method: "DELETE",
@@ -114,6 +116,7 @@ class StoryList {
   user.favorites = user.favorites.filter(s => s.storyId !== storyId);
 }
 }
+//LIVE CODE REVIEW: to better understand... this.stories = returns all the stories that does not equal the storyId that we passed through to be deleted...the rest of the stories?
 
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
@@ -187,7 +190,9 @@ class User {
     });
 
     let { user } = response.data;
-
+    
+    //LIVE CODE REVIEW: is the syntax above  let { user } = response.data object destructuring? is it putting the response.data into a user object
+    
     return new User(
       {
         username: user.username,
@@ -253,16 +258,20 @@ class User {
           const token = user.loginToken;
           const { storyId } = story;
           
+          // LIVE CODE REVIEW: same as above still confused on how  const { storyId } = story; works. I used it here as I saw it was used in the User class
+          
             await axios.delete(
               `${BASE_URL}/users/${username}/favorites/${storyId}`,
               { data: { token } }
             );
-           for(let i of user.favorites) {
+           for(let i of user.favorites) {                                  // I wonder if its possible to use MAP here instead of a for of loop?
              if(i.story === user.favorites.story)
              user.favorites.splice(user.favorites.indexOf(story), 1)
 
            }
           }
+          // LIVE CODE REVIEW: on
+          
             
           
 
