@@ -259,7 +259,7 @@ class User {
           const { storyId } = story;
           
           // LIVE CODE REVIEW: same as above still confused on how  const { storyId } = story; works. I used it here as I saw it was used in the User class
-          
+          try { 
             await axios.delete(
               `${BASE_URL}/users/${username}/favorites/${storyId}`,
               { data: { token } }
@@ -267,9 +267,11 @@ class User {
            for(let i of user.favorites) {                                  // I wonder if its possible to use MAP here instead of a for of loop?
              if(i.story === user.favorites.story)
              user.favorites.splice(user.favorites.indexOf(story), 1)
-
+            };
+           } catch (e) {
+             console.log(e)
            }
-          }
+           
           // LIVE CODE REVIEW: on
           
             
@@ -278,6 +280,7 @@ class User {
         
       
       }
+    }
           
 
 
