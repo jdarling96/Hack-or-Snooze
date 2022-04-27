@@ -192,6 +192,7 @@ class User {
     let { user } = response.data;
     
     //LIVE CODE REVIEW: is the syntax above  let { user } = response.data object destructuring? is it putting the response.data into a user object
+    //AWNSER:  let { user } is user object destructuring it is cleaner code and is storing the all the associated response.data from this API call into a user variable
     
     return new User(
       {
@@ -258,7 +259,6 @@ class User {
           const token = user.loginToken;
           const { storyId } = story;
           
-          // LIVE CODE REVIEW: same as above still confused on how  const { storyId } = story; works. I used it here as I saw it was used in the User class
           try { 
             await axios.delete(
               `${BASE_URL}/users/${username}/favorites/${storyId}`,
